@@ -147,40 +147,35 @@ clang_darwin_dict['cxx-strict'] = [ '-ansi', '-Wnon-virtual-dtor', '-Woverloaded
 clang_darwin_dict['full-optimization'] = [ '-O3', '-ffast-math', '-fstrength-reduce' ]
 compiler_flags_dictionaries['clang-darwin'] = clang_darwin_dict;
 
-def fetch_git_revision ():
-    cmd = "git describe HEAD | sed 's/^[A-Za-z0-9]*+//'"
-    output = subprocess.Popen(cmd, shell=True, stderr=subprocess.STDOUT, stdout=subprocess.PIPE).communicate()[0].splitlines()
-    rev = output[0].decode ('utf-8')
-    return rev
-
-def fetch_tarball_revision ():
-    if not os.path.exists ('libs/ardour/revision.cc'):
-        print ('This tarball was not created correctly - it is missing libs/ardour/revision.cc')
-        sys.exit (1)
-    with open('libs/ardour/revision.cc') as f:
-        content = f.readlines()
-        remove_punctuation_map = dict((ord(char), None) for char in '";')
-        return content[1].decode('utf-8').strip().split(' ')[7].translate (remove_punctuation_map)
-
-if os.path.isdir (os.path.join(os.getcwd(), '.git')):
-    rev = fetch_git_revision ()
-else:
-    rev = fetch_tarball_revision ()
+#def fetch_git_revision ():
+#    cmd = "git describe HEAD | sed 's/^[A-Za-z0-9]*+//'"
+#    output = subprocess.Popen(cmd, shell=True, stderr=subprocess.STDOUT, stdout=subprocess.PIPE).communicate()[0].splitlines()
+#    rev = output[0].decode ('utf-8')
+#    return rev
+#
+#def fetch_tarball_revision ():
+#    if not os.path.exists ('libs/ardour/revision.cc'):
+#        print ('This tarball was not created correctly - it is missing libs/ardour/revision.cc')
+#        sys.exit (1)
+#    with open('libs/ardour/revision.cc') as f:
+#        content = f.readlines()
+#        remove_punctuation_map = dict((ord(char), None) for char in '";')
+#        return content[1].decode('utf-8').strip().split(' ')[7].translate (remove_punctuation_map)
+#
+#if os.path.isdir (os.path.join(os.getcwd(), '.git')):
+#    rev = fetch_git_revision ()
+#else:
+#    rev = fetch_tarball_revision ()
 
 #
 # rev is now of the form MAJOR.MINOR[-rcX]-rev-commit
 # or, if right at the same rev as a release, MAJOR.MINOR[-rcX]
 #
 
-parts = rev.split ('.', 1)
-MAJOR = parts[0]
-other = parts[1].split('-', 1)
-MINOR = other[0]
-if len(other) > 1:
-    MICRO = other[1].rsplit('-',1)[0].replace('-','.')
-else:
-    MICRO = '0'
-
+MAJOR = '_FBSD_MAJOR_'
+MINOR = '_FBSD_MINOR_'
+MICRO = '_FBSD_REVISION_'
+APPNAME = 'FreeBSD'
 V = MAJOR + '.' + MINOR + '.' + MICRO
 # Ensure that these are not unicode, which
 # can cause odd problems elsewhere. Note that
